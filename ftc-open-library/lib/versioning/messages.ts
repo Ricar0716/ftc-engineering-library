@@ -1,0 +1,15 @@
+export const VERSION_ERRORS = {
+  guest: "Sign in to create a new version.",
+  unverified: "Verify your email to create a new version.",
+  unauthorized: "You can only version resources you own.",
+  unpublished: "Only published resources can receive a new version.",
+  open: "Finish or withdraw the open revision before starting another.",
+  changelog: "Add a changelog before submitting this version for review.",
+  files: "Upload at least one file for this version.",
+  label: "Keep the version name to 80 characters or fewer.",
+  save: "Unable to create this version.",
+  submit: "Unable to submit this version for review.",
+  withdraw: "Unable to withdraw this version.",
+  moderate: "Unable to review this version.",
+  unavailable: "Versioning is unavailable on this server.",
+} as const;

@@ -1,0 +1,41 @@
+{
+  "name": "ftc-open-library",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON --test lib/categories/tree.test.ts lib/categories/slug.test.ts lib/categories/validation.test.ts lib/categories/errors.test.ts lib/auth/paths.test.ts lib/auth/permissions.test.ts lib/auth/errors.test.ts lib/auth/rls-audit.test.ts lib/auth/published-lock-audit.test.ts lib/auth/category-admin-audit.test.ts lib/auth/submission-moderation-audit.test.ts lib/auth/upload-hardening-audit.test.ts lib/auth/upload-video-hardening-audit.test.ts lib/admin/category-search.test.ts lib/downloads/path.test.ts lib/downloads/private-access.test.ts lib/downloads/verified-flow.test.ts lib/config/uploads.test.ts lib/config/upload-policy.test.ts lib/storage/resource-paths.test.ts lib/resources/slug.test.ts lib/resources/transitions.test.ts lib/resources/validation.test.ts lib/auth/upload-tus-audit.test.ts lib/uploads/progress.test.ts lib/uploads/endpoint.test.ts lib/uploads/fingerprint.test.ts lib/uploads/transport-audit.test.ts lib/uploads/expiry.test.ts lib/previews/select.test.ts lib/previews/mesh-thumbnail.test.ts lib/previews/security-audit.test.ts lib/previews/file-tree.test.ts lib/previews/highlight.test.ts lib/resources/detail-ui.test.ts lib/resources/detail-page.test.ts lib/discovery/thumbnail.test.ts lib/discovery/empty.test.ts lib/discovery/homepage.test.ts lib/search/params.test.ts lib/search/query.test.ts lib/search/explore.test.ts lib/identity/paths.test.ts lib/identity/pages.test.ts lib/constants/navigation.test.ts lib/favorites/security-audit.test.ts lib/favorites/ui.test.ts lib/discussion/validation.test.ts lib/discussion/security-audit.test.ts lib/discussion/ui.test.ts lib/versioning/validation.test.ts lib/versioning/security-audit.test.ts lib/versioning/ui.test.ts lib/dashboard/nav.test.ts lib/dashboard/security-audit.test.ts lib/dashboard/ui.test.ts lib/admin/nav.test.ts lib/admin/overview-security.test.ts lib/admin/overview-ui.test.ts lib/admin/resources/params.test.ts lib/admin/resources/moderation.test.ts lib/admin/versions/params.test.ts lib/admin/versions/moderation.test.ts lib/admin/versions/hardening.test.ts lib/seo/seo.test.ts lib/ux/public-ux.test.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "pack:source": "bash scripts/pack-source-zip.sh"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.12.5",
+    "@supabase/supabase-js": "^2.112.4",
+    "highlight.js": "^11.12.0",
+    "next": "16.3.4",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "server-only": "^0.0.1",
+    "three": "^0.186.0",
+    "tus-js-client": "^4.3.1",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/three": "^0.185.4",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.4",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.9.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

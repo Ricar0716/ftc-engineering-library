@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-ibm-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-ibm-plex-mono), ui-monospace, "SFMono-Regular", monospace;
+
+  --color-canvas: #f4f2ee;
+  --color-surface: #fffcf8;
+  --color-ink: #1c1915;
+  --color-ink-muted: #5e584f;
+  --color-line: #ddd6cc;
+  --color-accent: #1f4e79;
+  --color-accent-hover: #173b5c;
+  --color-accent-soft: #e7eef5;
+  --color-cad: #1f4e79;
+  --color-code: #2d6a4f;
+  --color-tutorial: #9a3412;
+  --color-model: #534a80;
+  --color-danger: #9f1239;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  ::selection {
+    background: var(--color-accent-soft);
+    color: var(--color-ink);
+  }
+}
+
+/* Syntax highlighting for authorized source previews. highlight.js emits these classes. */
+.hljs {
+  color: var(--color-ink);
+  background: transparent;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-built_in,
+.hljs-type {
+  color: var(--color-accent);
+}
+.hljs-string,
+.hljs-attr,
+.hljs-attribute {
+  color: var(--color-code);
+}
+.hljs-comment,
+.hljs-quote {
+  color: var(--color-ink-muted);
+  font-style: italic;
+}
+.hljs-number,
+.hljs-literal {
+  color: var(--color-tutorial);
+}
+.hljs-title,
+.hljs-section,
+.hljs-name {
+  color: var(--color-model);
+}
