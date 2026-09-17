@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       task:
-        description: 'Task for the coding agent'
+        description: Task for the coding agent
         required: true
         type: string
 
@@ -14,7 +14,6 @@ permissions:
 
 jobs:
   implement:
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 45
 
@@ -41,15 +40,6 @@ jobs:
           curl https://cursor.com/install -fsS | bash
           echo "$HOME/.cursor/bin" >> "$GITHUB_PATH"
 
-      - name: Create agent branch
-        id: branch
-        run: |
-          BRANCH="agent/task-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
-          git config user.name "FTC AI Agent"
-          git config user.email "agent@users.noreply.github.com"
-          git checkout -b "$BRANCH"
-
       - name: Run Cursor coding agent
         working-directory: ftc-open-library
         env:
@@ -61,19 +51,21 @@ jobs:
             exit 1
           fi
 
-          agent -p "$(cat ../.ai/coder.md)
+          {
+            cat ../.ai/coder.md
+            printf '\n\nUSER TASK:\n%s\n\n' "$TASK"
+            printf '%s\n' \
+              'Additional CI rules:' \
+              '- Read AGENTS.md before editing.' \
+              '- Do not create, switch, commit, merge, or push git branches.' \
+              '- Do not use gh or change GitHub settings.' \
+              '- Do not edit .env files or secrets.' \
+              '- Only modify files needed for the task.' \
+              '- Run relevant project checks before finishing when practical.' \
+              'A later deterministic GitHub Actions step will validate and publish your changes.'
+          } > /tmp/cursor-prompt.txt
 
-USER TASK:
-$TASK
-
-Additional CI rules:
-- Read AGENTS.md before editing.
-- Do not create, switch, commit, merge, or push git branches.
-- Do not use gh or change GitHub settings.
-- Do not edit .env files or secrets.
-- Only modify files needed for the task.
-- Run relevant project checks before finishing when practical.
-A later deterministic GitHub Actions step will validate and publish your changes." --output-format text
+          agent -p "$(cat /tmp/cursor-prompt.txt)" --output-format text
 
       - name: Validate changes
         working-directory: ftc-open-library
@@ -83,27 +75,26 @@ A later deterministic GitHub Actions step will validate and publish your changes
           npm test
           npm run build
 
-      - name: Commit and push changes
-        id: commit
+      - name: Publish changes as pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TASK: ${{ inputs.task }}
         run: |
+          git config user.name "FTC AI Agent"
+          git config user.email "agent@users.noreply.github.com"
+
+          BRANCH="agent/task-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git checkout -b "$BRANCH"
           git add -A
+
           if git diff --cached --quiet; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "Cursor completed without producing file changes." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
 
           git commit -m "feat: implement AI coding task"
-          git push origin "${{ steps.branch.outputs.branch }}"
-          echo "changed=true" >> "$GITHUB_OUTPUT"
+          git push origin "$BRANCH"
 
-      - name: Open pull request
-        if: steps.commit.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TASK: ${{ inputs.task }}
-          BRANCH: ${{ steps.branch.outputs.branch }}
-        run: |
           TITLE="$(printf '%s' "$TASK" | tr '\n' ' ' | cut -c1-72)"
           {
             printf '%s\n\n' 'Implemented automatically by Cursor Agent.'
@@ -113,8 +104,8 @@ A later deterministic GitHub Actions step will validate and publish your changes
             printf '%s\n' '- lint'
             printf '%s\n' '- typecheck'
             printf '%s\n' '- tests'
-            printf '%s\n' '- production build'
-            printf '%s\n\n' 'Review the diff before merging.'
+            printf '%s\n\n' '- production build'
+            printf '%s\n' 'Review the diff before merging.'
           } > /tmp/pr-body.md
 
           gh pr create \
