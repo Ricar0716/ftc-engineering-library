@@ -188,8 +188,8 @@ test("contributor and upload errors stay mapped away from SQL and storage intern
   assert.doesNotMatch(transport, /supabase/);
 });
 
-test("the homepage hides empty featured and type sections", () => {
-  assert.match(homepage, /featured\.total === 0/);
+test("the homepage hides empty popular and type sections", () => {
+  assert.match(homepage, /popular\.total === 0/);
   assert.match(homepage, /DISCOVERY_EMPTY\.launch/);
 });
 

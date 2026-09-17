@@ -47,6 +47,7 @@ export type ResourceSummary = {
   updatedAt?: string | null;
   publishedAt?: string | null;
   ratingAverage?: number | null;
+  ratingCount?: number | null;
   downloadCount?: number | null;
   favoriteCount?: number | null;
   thumbnailUrl?: string | null;

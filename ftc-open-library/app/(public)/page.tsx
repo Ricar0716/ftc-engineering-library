@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { BrowseByType } from "@/components/discovery/browse-by-type";
 import { CategorySection } from "@/components/discovery/category-section";
 import { ContributeCta } from "@/components/discovery/contribute-cta";
-import { FeaturedResources } from "@/components/discovery/featured-resources";
+import { PopularResources } from "@/components/discovery/popular-resources";
 import { HomepageHero } from "@/components/discovery/homepage-hero";
 import { Container } from "@/components/ui/container";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -27,8 +27,8 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [featured, cad, code, tutorials, models, teams, access] = await Promise.all([
-    listPublishedResources({ sort: "latest", page: 1, pageSize: 6 }),
+  const [popular, cad, code, tutorials, models, teams, access] = await Promise.all([
+    listPublishedResources({ sort: "downloads", page: 1, pageSize: 6 }),
     getLatestResourcesByType("CAD", 3),
     getLatestResourcesByType("CODE", 3),
     getLatestResourcesByType("TUTORIAL", 3),
@@ -39,11 +39,11 @@ export default async function HomePage() {
 
   return (
     <main id="main-content">
-      <HomepageHero access={access} publishedCount={featured.total} />
+      <HomepageHero access={access} publishedCount={popular.total} />
 
       <Container width="wide" className="flex min-w-0 flex-col gap-12 py-12">
         <BrowseByType />
-        {featured.total === 0 ? (
+        {popular.total === 0 ? (
           <EmptyState
             title={DISCOVERY_EMPTY.library}
             description={DISCOVERY_EMPTY.launch}
@@ -55,7 +55,7 @@ export default async function HomePage() {
           />
         ) : (
           <>
-            <FeaturedResources resources={featured.items} />
+            <PopularResources resources={popular.items} />
             <CategorySection type="CAD" resources={cad} />
             <CategorySection type="CODE" resources={code} />
             <CategorySection type="TUTORIAL" resources={tutorials} />
@@ -66,8 +66,13 @@ export default async function HomePage() {
         {teams.length > 0 ? (
           <section className="flex min-w-0 flex-col gap-4">
             <div className="flex min-w-0 items-end justify-between gap-3">
-              <h2 className="text-xl font-medium">Teams</h2>
-              <ButtonLink href="/teams" variant="ghost" size="sm">
+              <div className="min-w-0">
+                <h2 className="text-xl font-medium">Teams</h2>
+                <p className="mt-1 text-sm leading-6 text-ink-muted">
+                  Public team pages and the published work attached to them.
+                </p>
+              </div>
+              <ButtonLink href="/teams" variant="ghost" size="sm" className="shrink-0">
                 Browse teams
               </ButtonLink>
             </div>

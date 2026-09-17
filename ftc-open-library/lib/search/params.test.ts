@@ -20,6 +20,7 @@ test("newest and relevance aliases stay on existing simple sorts", () => {
   assert.equal(parseExploreSearchParams({ sort: "newest" }).sort, "latest");
   assert.equal(parseExploreSearchParams({ sort: "relevance" }).sort, "relevance");
   assert.equal(parseExploreSearchParams({ sort: "downloads" }).sort, "downloads");
+  assert.equal(parseExploreSearchParams({ sort: "rating" }).sort, "rating");
   assert.equal(parseExploreSearchParams({ sort: "vector" }).sort, "latest");
 });
 
@@ -33,4 +34,5 @@ test("explore paths keep filters in the query string", () => {
     buildExplorePath({ type: "CAD", season: "IntoDeep", tag: "drivetrain", sort: "downloads" }),
     "/explore?type=CAD&tag=drivetrain&season=IntoDeep&sort=downloads",
   );
+  assert.equal(buildExplorePath({ sort: "rating" }), "/explore?sort=rating");
 });

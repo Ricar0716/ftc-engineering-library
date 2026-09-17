@@ -92,6 +92,7 @@ export const EXPLORE_SORT_OPTIONS = [
   { value: "latest", label: "Newest" },
   { value: "updated", label: "Recently updated" },
   { value: "downloads", label: "Most downloaded" },
+  { value: "rating", label: "Highest rated" },
 ] as const;
 
 /** Accepted URL/backend sorts. The toolbar only offers EXPLORE_SORT_OPTIONS. */

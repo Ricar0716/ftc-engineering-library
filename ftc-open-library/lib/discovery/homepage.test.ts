@@ -17,7 +17,8 @@ const hero = readFileSync(
 test("the homepage loads published lists, not drafts or CAD viewers", () => {
   assert.match(homepage, /listPublishedResources/);
   assert.match(homepage, /<HomepageHero/);
-  assert.match(homepage, /<FeaturedResources/);
+  assert.match(homepage, /<PopularResources/);
+  assert.match(homepage, /sort: "downloads"/);
   assert.match(homepage, /<CategorySection type="CAD"/);
   assert.doesNotMatch(homepage, /CADPreview/);
   assert.doesNotMatch(homepage, /ModelViewer/);

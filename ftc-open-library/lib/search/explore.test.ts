@@ -62,6 +62,7 @@ test("explore URL state covers query, type, category, tag, season, sort, and pag
   assert.equal(parseExploreSearchParams({ type: "MODEL" }).type, "MODEL");
   assert.equal(parseExploreSearchParams({ sort: "updated" }).sort, "updated");
   assert.equal(parseExploreSearchParams({ sort: "downloads" }).sort, "downloads");
+  assert.equal(parseExploreSearchParams({ sort: "rating" }).sort, "rating");
 });
 
 test("shareable explore paths keep filters out of React-only state", () => {
@@ -85,6 +86,7 @@ test("shareable explore paths keep filters out of React-only state", () => {
     "/explore?q=vision&type=CODE&tag=autonomous&sort=updated",
   );
   assert.equal(buildExplorePath({ sort: "downloads" }), "/explore?sort=downloads");
+  assert.equal(buildExplorePath({ sort: "rating" }), "/explore?sort=rating");
   assert.equal(
     explorePathWith(
       parseExploreSearchParams({ q: "mecanum", type: "CAD", page: "4" }),
@@ -96,17 +98,22 @@ test("shareable explore paths keep filters out of React-only state", () => {
   assert.equal(hasActiveExploreFilters(parseExploreSearchParams({ sort: "updated" })), false);
 });
 
-test("toolbar sorts are newest, recently updated, and real download counts", () => {
+test("toolbar sorts are newest, recently updated, downloads, and highest rated", () => {
   assert.deepEqual(
     EXPLORE_SORT_OPTIONS.map((option) => option.value),
-    ["latest", "updated", "downloads"],
+    ["latest", "updated", "downloads", "rating"],
   );
   assert.equal(
     EXPLORE_SORT_OPTIONS.find((option) => option.value === "downloads")?.label,
     "Most downloaded",
   );
+  assert.equal(
+    EXPLORE_SORT_OPTIONS.find((option) => option.value === "rating")?.label,
+    "Highest rated",
+  );
   assert.match(sortSelector, /EXPLORE_SORT_OPTIONS/);
   assert.doesNotMatch(sortSelector, /popularity/);
+  assert.doesNotMatch(sortSelector, /Trending/);
 });
 
 test("explore search stays on published rows and database filters", () => {

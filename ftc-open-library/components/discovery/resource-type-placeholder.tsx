@@ -19,14 +19,17 @@ export function ResourceTypePlaceholder({
   return (
     <div
       className={cn(
-        "flex aspect-[16/9] w-full flex-col items-start justify-end gap-1 px-4 py-3",
+        "relative flex aspect-[16/9] w-full flex-col items-start justify-end gap-1 overflow-hidden px-4 py-3",
         tones[type],
         className,
       )}
       aria-hidden="true"
     >
-      <p className="font-mono text-[11px] uppercase tracking-wide">{RESOURCE_TYPE_LABELS[type]}</p>
-      <p className="text-sm font-medium">{RESOURCE_TYPE_PURPOSE[type]}</p>
+      <svg className="absolute inset-0 h-full w-full opacity-[0.14]" viewBox="0 0 160 90" preserveAspectRatio="none">
+        <path d="M0 30h160M0 60h160M40 0v90M80 0v90M120 0v90" fill="none" stroke="currentColor" strokeWidth="0.6" />
+      </svg>
+      <p className="relative font-mono text-[11px] uppercase tracking-wide">{RESOURCE_TYPE_LABELS[type]}</p>
+      <p className="relative text-sm font-medium">{RESOURCE_TYPE_PURPOSE[type]}</p>
     </div>
   );
 }

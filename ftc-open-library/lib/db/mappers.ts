@@ -55,7 +55,7 @@ export type ResourceSummarySource = Pick<
 
 export function mapResourceSummary(
   row: ResourceSummarySource,
-  stats?: Pick<ResourceStatsRow, "rating_average" | "download_count" | "favorite_count"> | null,
+  stats?: Pick<ResourceStatsRow, "rating_average" | "download_count" | "rating_count" | "favorite_count"> | null,
 ): ResourceSummary {
   const author: ResourceAuthor | null = row.author
     ? {
@@ -80,6 +80,7 @@ export function mapResourceSummary(
     updatedAt: row.updated_at ?? null,
     publishedAt: row.published_at ?? null,
     ratingAverage: stats?.rating_average ?? null,
+    ratingCount: stats?.rating_count ?? null,
     downloadCount: stats?.download_count ?? null,
     favoriteCount: stats?.favorite_count ?? null,
     thumbnailUrl: row.thumbnail_url,
