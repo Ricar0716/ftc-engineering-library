@@ -1,9 +1,6 @@
 name: AI Coder
 
 on:
-  pull_request:
-    paths:
-      - '.github/workflows/ai-coder.yml'
   workflow_dispatch:
     inputs:
       task:
@@ -12,13 +9,116 @@ on:
         type: string
 
 permissions:
-  contents: read
+  contents: write
+  pull-requests: write
 
 jobs:
-  validate:
+  implement:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 45
+
     steps:
-      - name: Validate workflow registration
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ftc-open-library/package-lock.json
+
+      - name: Install project dependencies
+        working-directory: ftc-open-library
+        run: npm ci
+
+      - name: Install Cursor CLI
         run: |
-          echo "AI Coder workflow is registered successfully."
-          echo "Event: $GITHUB_EVENT_NAME"
+          curl https://cursor.com/install -fsS | bash
+          echo "$HOME/.cursor/bin" >> "$GITHUB_PATH"
+
+      - name: Create agent branch
+        id: branch
+        run: |
+          BRANCH="agent/task-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          echo "branch=$BRANCH" >> "$GITHUB_OUTPUT"
+          git config user.name "FTC AI Agent"
+          git config user.email "agent@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+
+      - name: Run Cursor coding agent
+        working-directory: ftc-open-library
+        env:
+          CURSOR_API_KEY: ${{ secrets.CURSOR_API_KEY }}
+          TASK: ${{ inputs.task }}
+        run: |
+          if [ -z "$CURSOR_API_KEY" ]; then
+            echo "CURSOR_API_KEY is missing. Add it in Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+
+          agent -p "$(cat ../.ai/coder.md)
+
+USER TASK:
+$TASK
+
+Additional CI rules:
+- Read AGENTS.md before editing.
+- Do not create, switch, commit, merge, or push git branches.
+- Do not use gh or change GitHub settings.
+- Do not edit .env files or secrets.
+- Only modify files needed for the task.
+- Run relevant project checks before finishing when practical.
+A later deterministic GitHub Actions step will validate and publish your changes." --output-format text
+
+      - name: Validate changes
+        working-directory: ftc-open-library
+        run: |
+          npm run lint
+          npm run typecheck
+          npm test
+          npm run build
+
+      - name: Commit and push changes
+        id: commit
+        run: |
+          git add -A
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Cursor completed without producing file changes." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          git commit -m "feat: implement AI coding task"
+          git push origin "${{ steps.branch.outputs.branch }}"
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      - name: Open pull request
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TASK: ${{ inputs.task }}
+          BRANCH: ${{ steps.branch.outputs.branch }}
+        run: |
+          TITLE="$(printf '%s' "$TASK" | tr '\n' ' ' | cut -c1-72)"
+          {
+            printf '%s\n\n' 'Implemented automatically by Cursor Agent.'
+            printf '%s\n\n' 'Original task:'
+            printf '%s\n\n' "$TASK"
+            printf '%s\n' 'Validation run by GitHub Actions:'
+            printf '%s\n' '- lint'
+            printf '%s\n' '- typecheck'
+            printf '%s\n' '- tests'
+            printf '%s\n' '- production build'
+            printf '%s\n\n' 'Review the diff before merging.'
+          } > /tmp/pr-body.md
+
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "AI task: $TITLE" \
+            --body-file /tmp/pr-body.md
