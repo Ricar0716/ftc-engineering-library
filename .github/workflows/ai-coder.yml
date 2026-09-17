@@ -4,16 +4,28 @@ on:
   workflow_dispatch:
     inputs:
       task:
-        description: Task for the coding agent
+        description: 'Task for the coding agent'
         required: true
         type: string
+  pull_request:
+    paths:
+      - '.github/workflows/ai-coder.yml'
+      - '.ai/**'
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
+  validate-definition:
+    if: ${{ github.event_name == 'pull_request' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Confirm workflow loaded
+        run: echo "AI Coder workflow definition loaded successfully."
+
   implement:
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +37,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
           cache-dependency-path: ftc-open-library/package-lock.json
 
@@ -84,7 +96,7 @@ $TASK"
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
       - name: Open pull request
-        if: steps.commit.outputs.changed == 'true'
+        if: ${{ steps.commit.outputs.changed == 'true' }}
         env:
           GH_TOKEN: ${{ github.token }}
           TASK: ${{ inputs.task }}
