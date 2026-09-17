@@ -1,0 +1,24 @@
+name: AI Coder
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/ai-coder.yml'
+  workflow_dispatch:
+    inputs:
+      task:
+        description: 'Task for the coding agent'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate workflow registration
+        run: |
+          echo "AI Coder workflow is registered successfully."
+          echo "Event: $GITHUB_EVENT_NAME"

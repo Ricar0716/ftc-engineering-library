@@ -1,0 +1,43 @@
+name: AI coding task
+description: Describe a task for the FTC Open Library coding workflow
+title: "[AI Task] "
+labels: []
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should change?
+      placeholder: Improve the CAD resource card preview experience.
+    validations:
+      required: true
+
+  - type: textarea
+    id: requirements
+    attributes:
+      label: Requirements
+      description: List concrete behavior and constraints.
+      placeholder: |
+        - Show a preview thumbnail on CAD cards
+        - Preserve current authorization rules
+        - Keep mobile layout responsive
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: How will we know the task is complete?
+      placeholder: |
+        - Existing tests pass
+        - New behavior has tests
+        - npm run lint, typecheck, test, and build pass
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes / non-goals
+      description: Optional context or things the agent must not change.
