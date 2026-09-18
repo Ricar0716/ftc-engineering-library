@@ -50,14 +50,13 @@ Before opening or merging a pull request:
 
 ```bash
 cd ftc-open-library
-npm run format:check
 npm run lint
 npm run typecheck
 npm test
 npm run build
 ```
 
-GitHub Actions runs the same validation on pull requests and on pushes to `main`.
+GitHub Actions runs those four checks on pull requests and on pushes to `main`. The repository also provides `npm run format:check`, but the existing codebase has formatting debt, so it is not yet enforced in CI.
 
 ## Documentation
 
