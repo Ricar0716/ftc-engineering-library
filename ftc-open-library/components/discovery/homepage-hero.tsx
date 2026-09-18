@@ -20,6 +20,9 @@ export function HomepageHero({
     <section className="border-b border-line bg-surface">
       <Container width="wide" className="flex min-w-0 flex-col gap-8 py-14 sm:py-16">
         <div className="max-w-2xl">
+          <div className="mb-4 inline-flex items-center rounded-full border border-line bg-background px-3 py-1 font-mono text-[11px] uppercase tracking-[0.14em] text-ink-muted">
+            Open source • Community built
+          </div>
           <p className="font-mono text-xs uppercase tracking-[0.16em] text-ink-muted">
             {siteConfig.philosophy}
           </p>
