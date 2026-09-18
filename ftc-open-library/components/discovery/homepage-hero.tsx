@@ -20,7 +20,7 @@ export function HomepageHero({
     <section className="border-b border-line bg-surface">
       <Container width="wide" className="flex min-w-0 flex-col gap-8 py-14 sm:py-16">
         <div className="max-w-2xl">
-          <p className="font-mono text-xs uppercase tracking-[0.16em] text-ink-muted">
+          <p className="inline-flex rounded-full border border-line bg-surface-subtle px-3 py-1 font-mono text-xs uppercase tracking-[0.16em] text-ink-muted">
             {siteConfig.philosophy}
           </p>
           <h1 className="mt-3 text-4xl font-medium tracking-tight text-ink sm:text-5xl">
