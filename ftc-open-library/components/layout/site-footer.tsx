@@ -39,8 +39,8 @@ export function SiteFooter() {
       </Container>
       <Container width="wide" className="border-t border-line py-4">
         <p className="text-xs leading-5 text-ink-muted">
-          FTC Open Library is a community project and is not affiliated with FIRST. FIRST, FIRST
-          Tech Challenge, and FTC are trademarks of FIRST.
+          © 2026 FTC Open Library is a community project and is not affiliated with FIRST. FIRST,
+          FIRST Tech Challenge, and FTC are trademarks of FIRST.
         </p>
       </Container>
     </footer>
