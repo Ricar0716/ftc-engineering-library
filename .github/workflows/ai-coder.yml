@@ -65,7 +65,7 @@ jobs:
               'A later deterministic GitHub Actions step will validate and publish your changes.'
           } > /tmp/cursor-prompt.txt
 
-          agent -p "$(cat /tmp/cursor-prompt.txt)" --output-format text
+          agent --trust -p "$(cat /tmp/cursor-prompt.txt)" --output-format text
 
       - name: Validate changes
         working-directory: ftc-open-library
